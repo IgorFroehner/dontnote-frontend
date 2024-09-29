@@ -5,9 +5,11 @@
 
 	import NoteModal from '$lib/components/NoteModal.svelte';
 	import { initializeStores, Modal, type ModalComponent } from '@skeletonlabs/skeleton';
+	import ConfirmModal from '$lib/components/ConfirmModal.svelte';
 
 	const modalRegistry: Record<string, ModalComponent> = {
 		noteModal: { ref: NoteModal },
+		confirmModal: { ref: ConfirmModal }
 	};
 </script>
 

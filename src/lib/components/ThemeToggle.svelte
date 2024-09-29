@@ -27,7 +27,7 @@
 	}
 </script>
 
-<label class="inline-flex cursor-pointer items-center mt-3 pr-10">
+<label class="inline-flex cursor-pointer items-center mt-3">
 	<input
 		type="checkbox"
 		bind:checked={darkMode}

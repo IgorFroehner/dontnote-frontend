@@ -1,27 +1,38 @@
 import { type Writable, writable } from 'svelte/store';
 import type { Note } from '$lib/types/note';
+import { deleteNote, loadNotes, saveNote } from '$lib/services/notes-service';
 
 export const notesStore: Writable<Note[]> = writable([], () => {
-	if (typeof localStorage !== 'undefined') {
-		const storedNotes = localStorage.getItem('notes');
-		if (storedNotes) {
-			notesStore.set(JSON.parse(storedNotes));
+	const notes = loadNotes();
+	notes.then((notes) => {
+		if (notes) {
+			notesStore.set(notes);
 		}
-	}
+	});
 
 	return () => {};
 });
 
-notesStore.subscribe((notes) => {
-	if (typeof localStorage !== 'undefined' && notes.length > 0) {
-		localStorage.setItem('notes', JSON.stringify(notes));
-	}
-});
-
 export const addNote = (note: Note) => {
-	notesStore.update((currentNotes) => [...currentNotes, note]);
+	saveNote(note).then((note) => {
+		notesStore.update((currentNotes) => [...currentNotes, note]);
+	});
+};
+
+export const updateNote = (note: Note) => {
+	saveNote(note).then((note) => {
+		notesStore.update((currentNotes) => {
+			const index = currentNotes.findIndex((n) => n.id === note.id);
+			if (index > -1) {
+				currentNotes[index] = note;
+			}
+			return currentNotes;
+		});
+	});
 };
 
 export const removeNote = (note: Note) => {
-	notesStore.update((currentNotes) => currentNotes.filter((n) => n !== note));
+	deleteNote(note).then(() => {
+		notesStore.update((currentNotes) => currentNotes.filter((n) => n.id !== note.id));
+	});
 };
