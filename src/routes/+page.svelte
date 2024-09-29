@@ -72,7 +72,7 @@
 		{#if notes.length === 0}
 			<div class="flex h-96 w-screen flex-col items-center justify-center dark:text-white">
 
-				<p class="text-2xl mb-5 text-gray-700 dark:text-gray-200">
+				<p class="text-2xl mb-5 text-gray-700 font-bold dark:text-gray-200">
 					Your notes as you've never experienced.
 				</p>
 
