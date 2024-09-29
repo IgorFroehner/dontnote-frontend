@@ -1,38 +1,40 @@
-<script>
+<script lang="ts">
 	import Card from '$lib/components/Card.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
+	import CreateNoteButton from '$lib/components/CreateNoteButton.svelte';
+	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
+	import { authInfo } from '$lib/stores/AuthStore';
+	import { notesStore } from '$lib/stores/NotesStore';
 
-	const cards = [
-		{
-			title: 'First Note',
-			content: 'This is the content of the first note.'
-		},
-		{
-			title: 'Second Note',
-			content: 'This is the content of the second note.'
-		},
-		{
-			title: 'Third Note',
-			content: 'This is the content of the third note.'
-		},
-		{
-			title: 'Fourth Note',
-			content: 'This is the content of the fourth note.'
-		},
-		{
-			title: 'Fifth Note',
-			content: 'Lorem ipsum adsf asdf asdf asdf asdf asdf as sadf'
-		},
-		{
-			title: 'Sixth Note',
-			content: 'Lorem ipsum adsf asdf asdf asdf asdf asdf as sadf'
-		},
-		{
-			title: 'Seventh Note',
-			content: 'Lorem ipsum adsf asdf asdf asdf asdf asdf as sadf'
+	const modalStore = getModalStore();
+
+	type Note = {
+		title: string;
+		content: string;
+	};
+
+	let notes: Note[] = [];
+
+	notesStore.subscribe((notesStored) => {
+		notes = notesStored;
+	});
+
+	authInfo.subscribe((info) => {
+		if (!info) {
+			return notesStore;
 		}
-	];
+		// Fetch cards from the server
+	});
+
+	const openModal = () => {
+		const modal: ModalSettings = {
+			type: 'component',
+			component: 'noteModal',
+			meta: {}
+		};
+		modalStore.trigger(modal)
+	};
 </script>
 
 <header>
@@ -49,11 +51,13 @@
 
 <div class="container mx-auto mt-5 min-h-full dark:bg-gray-950">
 	<div class="border-black-200 container flex flex-wrap items-start gap-4 rounded-md p-4">
-		{#each cards as card}
-			<Card title={card.title} content={card.content} />
+		{#each notes as note}
+			<Card title={note.title} content={note.content} />
 		{/each}
 	</div>
 </div>
+
+<CreateNoteButton on:click={openModal}/>
 
 <style>
 	.logo-text {
