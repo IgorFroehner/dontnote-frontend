@@ -12,6 +12,7 @@
 
 	let notes: Note[] = [];
 	let search = '';
+	let loading = true;
 
 	notesStore.subscribe((notesStored) => {
 		notes = notesStored;
@@ -48,7 +49,7 @@
 
 <header>
 	<nav class="bg-white px-4 dark:bg-gray-950" aria-label="Page navigation">
-		<div class="flex items-center justify-between">
+		<div class="flex items-center justify-between gap-3">
 			<h1 class="logo-text pb-3 pl-5 pt-5 dark:text-gray-200"><a href="/">DontNote</a></h1>
 
 			<SearchBar bind:search />
@@ -56,7 +57,7 @@
 			<ThemeToggle />
 
 			<a href="/sign_in">
-				<button type="button" class="mt-3 rounded-lg bg-gray-300 px-4 py-2 font-bold text-black">
+				<button type="button" class="w-24 mt-3 rounded-lg bg-gray-300 px-4 py-2 font-bold text-black">
 					Sing In
 				</button>
 			</a>
@@ -69,7 +70,7 @@
 		{#each notes as note}
 			<NoteCard {note} />
 		{/each}
-		{#if notes.length === 0}
+		{#if notes.length === 0 && !loading}
 			<div class="flex h-96 w-screen flex-col items-center justify-center dark:text-white">
 				<p class="mb-5 text-2xl font-bold text-gray-700 dark:text-gray-200">
 					Your notes as you've never experienced.
