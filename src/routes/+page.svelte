@@ -16,6 +16,7 @@
 
 	notesStore.subscribe((notesStored) => {
 		notes = notesStored;
+		loading = false;
 	});
 
 	const openModal = () => {

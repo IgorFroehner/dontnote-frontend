@@ -60,7 +60,7 @@
 	<div class="dialog relative w-1/2 rounded-lg border border-gray-300 bg-white dark:bg-gray-800">
 		<!-- Close button -->
 		<button
-			class="close-button text-xl font-bold text-gray-900 dark:text-gray-400 outline-none hover:text-gray-600 dark:hover:text-gray-500"
+			class="close-button focus-visible:ring-0 focus:outline-none text-xl font-bold text-gray-900 dark:text-gray-400 outline-none hover:text-gray-600 dark:hover:text-gray-500"
 			on:click={() => modalStore.close()}
 		>
 			&times;
