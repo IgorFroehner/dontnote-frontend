@@ -10,7 +10,7 @@
 		content: ''
 	};
 	export let mode: 'editor' | 'show' = 'editor';
-	let editing = note.id === undefined;
+	$: editing = note.id !== undefined;
 
 	export let parent: SvelteComponent;
 
@@ -58,7 +58,6 @@
 		class="backdrop"
 	></div>
 	<div class="dialog relative w-1/2 rounded-lg border border-gray-300 bg-white dark:bg-gray-800">
-		<!-- Close button -->
 		<button
 			class="close-button focus-visible:ring-0 focus:outline-none text-xl font-bold text-gray-900 dark:text-gray-400 outline-none hover:text-gray-600 dark:hover:text-gray-500"
 			on:click={() => modalStore.close()}
@@ -95,19 +94,19 @@
 					<div class="mt-4 flex justify-end gap-2">
 						<button
 							type="button"
-							on:click={() => modalStore.close()}
+							on:click={() => editing ? (mode = 'show') : modalStore.close()}
 							class="rounded-lg bg-gray-300 px-4 py-2 text-black"
 						>
 							Cancel
 						</button>
 						<button type="submit" class="rounded-lg bg-gray-600 px-4 py-2 text-white">
-							{#if editing}Save Note{:else}Create Note{/if}
+							{#if editing}Save{:else}Create{/if}
 						</button>
 					</div>
 				</form>
 			{:else if mode === 'show'}
 				<div class="flex items-center justify-between">
-					<h2 class="text-xl font-bold dark:text-white">{note.title}</h2>
+					<h2 class="text-2xl font-bold dark:text-white">{note.title}</h2>
 					<div class="mx-2 flex gap-3">
 						<button on:click={() => (mode = 'editor')}>
 							<svg
@@ -135,7 +134,7 @@
 						</button>
 					</div>
 				</div>
-				<p class="mt-2 dark:text-white">{note.content}</p>
+				<p class="mt-2 dark:text-gray-200 whitespace-pre-wrap">{note.content}</p>
 			{/if}
 		</div>
 	</div>
