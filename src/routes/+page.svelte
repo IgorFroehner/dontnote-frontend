@@ -12,11 +12,9 @@
 
 	let notes: Note[] = [];
 	let search = '';
-	let loading = true;
 
 	notesStore.subscribe((notesStored) => {
 		notes = notesStored;
-		loading = false;
 	});
 
 	const openModal = () => {
@@ -71,7 +69,7 @@
 		{#each notes as note}
 			<NoteCard {note} />
 		{/each}
-		{#if notes.length === 0 && !loading}
+		{#if $notesStore.length === 0}
 			<div class="flex h-96 w-screen flex-col items-center justify-center dark:text-white">
 				<p class="mb-5 text-2xl font-bold text-gray-700 dark:text-gray-200">
 					Your notes as you've never experienced.
