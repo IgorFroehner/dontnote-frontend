@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, type SvelteComponent } from 'svelte';
+	import { onDestroy, onMount, type SvelteComponent } from 'svelte';
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { addNote, removeNote, updateNote } from '$lib/stores/NotesStore';
 	import type { Note } from '$lib/types/note';
@@ -22,10 +22,11 @@
 		} else {
 			updateNote(note);
 		}
-		modalStore.close();
+		close();
 	}
 
 	onMount(() => {
+		document.body.classList.add('overflow-hidden');
 		if ($modalStore[0] && $modalStore[0].meta.note) {
 			note = $modalStore[0].meta.note;
 		}
@@ -51,12 +52,14 @@
 	const close = () => {
 		modalStore.close();
 	};
+
+	onDestroy(() => {
+		document.body.classList.remove('overflow-hidden');
+	});
 </script>
 
 {#if $modalStore[0]}
-	<div
-		class="backdrop"
-	></div>
+	<div class="backdrop"></div>
 	<div class="dialog relative w-1/2 rounded-lg border border-gray-300 bg-white dark:bg-gray-800">
 		<button
 			class="close-button focus-visible:ring-0 focus:outline-none text-xl font-bold text-gray-900 dark:text-gray-400 outline-none hover:text-gray-600 dark:hover:text-gray-500"
@@ -91,7 +94,7 @@
 						required
 					></textarea>
 
-					<div class="mt-4 flex justify-end gap-2">
+					<div class="flex justify-end gap-2">
 						<button
 							type="button"
 							on:click={() => editing ? (mode = 'show') : modalStore.close()}
@@ -134,13 +137,18 @@
 						</button>
 					</div>
 				</div>
-				<p class="mt-2 dark:text-gray-200 whitespace-pre-wrap">{note.content}</p>
+				<div class="note-content-show overflow-y-auto">
+					<p class="mt-2 dark:text-gray-200 whitespace-pre-wrap">{note.content}</p>
+				</div>
 			{/if}
 		</div>
 	</div>
 {/if}
 
 <style>
+	.note-content-show {
+		max-height: 500px;
+	}
 	.close-button {
 		position: absolute;
 		top: -2.5rem;
@@ -152,6 +160,7 @@
 		padding: 1rem;
 		width: 100%;
 		max-width: 80%;
+		max-height: 600px;
 		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 		z-index: 1000;
 	}
