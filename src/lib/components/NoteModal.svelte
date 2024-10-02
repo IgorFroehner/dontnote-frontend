@@ -108,7 +108,7 @@
 					</div>
 				</form>
 			{:else if mode === 'show'}
-				<div class="flex items-center justify-between">
+				<div class="flex items-center justify-between pb-4">
 					<h2 class="text-2xl font-bold dark:text-white">{note.title}</h2>
 					<div class="mx-2 flex gap-3">
 						<button on:click={() => (mode = 'editor')}>
@@ -159,7 +159,7 @@
 	.dialog {
 		padding: 1rem;
 		width: 100%;
-		max-width: 80%;
+		max-width: 60%;
 		max-height: 600px;
 		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 		z-index: 1000;
