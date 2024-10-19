@@ -10,14 +10,14 @@
 			$modalStore[0].response(true);
 		}
 		modalStore.close();
-	}
+	};
 
 	const onCancel = () => {
 		if ($modalStore[0]?.response) {
 			$modalStore[0].response(false);
 		}
 		modalStore.close();
-	}
+	};
 </script>
 
 {#if $modalStore[0]}
@@ -29,30 +29,30 @@
 			<p class="mt-2 dark:text-white">{body}</p>
 
 			<div class="mt-4 flex justify-end gap-2">
-				<button on:click={onCancel} class="bg-gray-300 text-black px-4 py-2 rounded-lg">No</button>
-				<button on:click={onConfirm} class="bg-red-500 text-white px-4 py-2 rounded-lg">Yes</button>
+				<button on:click={onCancel} class="rounded-lg bg-gray-300 px-4 py-2 text-black">No</button>
+				<button on:click={onConfirm} class="rounded-lg bg-red-500 px-4 py-2 text-white">Yes</button>
 			</div>
 		</div>
 	</dialog>
 {/if}
 
 <style>
-  dialog {
-    border: none;
-    padding: 1rem;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 33%;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-  }
-  .backdrop {
-    background-color: rgba(0, 0, 0, 0.5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10;
-  }
+	dialog {
+		border: none;
+		padding: 1rem;
+		border-radius: 8px;
+		width: 100%;
+		max-width: 33%;
+		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+		z-index: 1000;
+	}
+	.backdrop {
+		background-color: rgba(0, 0, 0, 0.5);
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 10;
+	}
 </style>

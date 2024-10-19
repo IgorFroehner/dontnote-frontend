@@ -2,16 +2,24 @@ import { authInfo } from '$lib/stores/AuthStore';
 import { notesStore } from '$lib/stores/NotesStore';
 import { get } from 'svelte/store';
 import type { Note } from '$lib/types/note';
+import Fuse from 'fuse.js';
 
-export const searchNotes = async(query: string) => {
+export const searchNotes = async (query: string) => {
 	const notes = await loadNotes();
 
-	return notes?.filter((note: Note) => {
-		return note.title.includes(query) || note.content.includes(query);
-	});
+	const fuseOptions = {
+		keys: [
+			{ name: 'title', weight: 0.7 },
+			{ name: 'content', weight: 0.3 }
+		]
+	};
+
+	const fuse = new Fuse(notes || [], fuseOptions);
+
+	return fuse.search(query).map((result) => result.item);
 };
 
-export const loadNotes = async() => {
+export const loadNotes = async () => {
 	if (get(authInfo)) {
 		// return notes from backend
 		return notesStore.set([]);
@@ -19,11 +27,11 @@ export const loadNotes = async() => {
 
 	if (typeof localStorage !== 'undefined') {
 		const notes = localStorage.getItem('notes');
-		return notes ? JSON.parse(notes) as Note[] : [];
+		return notes ? (JSON.parse(notes) as Note[]) : [];
 	}
-}
+};
 
-export const saveNote = async(note: Note) => {
+export const saveNote = async (note: Note) => {
 	if (note.id === undefined) {
 		note.id = `local-${Date.now().toString()}`;
 	}
@@ -51,7 +59,7 @@ export const saveNote = async(note: Note) => {
 	return note;
 };
 
-export const deleteNote = async(note: Note) => {
+export const deleteNote = async (note: Note) => {
 	if (!note.id) return;
 
 	if (get(authInfo)) {

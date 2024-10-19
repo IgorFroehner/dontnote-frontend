@@ -7,6 +7,7 @@
 	import { notesStore } from '$lib/stores/NotesStore';
 	import type { Note } from '$lib/types/note';
 	import Fuse from 'fuse.js';
+	import { searchNotes } from '$lib/services/notes-service';
 
 	const modalStore = getModalStore();
 
@@ -26,18 +27,9 @@
 		modalStore.trigger(modal);
 	};
 
-	const fuseOptions = {
-		keys: [
-			{ name: 'title', weight: 0.7 },
-			{ name: 'content', weight: 0.3 }
-		]
-	};
-
 	$: {
 		if (search) {
-			const fuse = new Fuse(notes, fuseOptions);
-
-			notes = fuse.search(search).map((result) => result.item);
+			searchNotes(search).then((notes_found) => notes = notes_found);
 		} else {
 			notesStore.subscribe((notesStored) => {
 				notes = notesStored;
@@ -56,7 +48,10 @@
 			<ThemeToggle />
 
 			<a href="/sign_in">
-				<button type="button" class="w-24 mt-3 rounded-lg bg-gray-300 px-4 py-2 font-bold text-black">
+				<button
+					type="button"
+					class="mt-3 w-24 rounded-lg bg-gray-300 px-4 py-2 font-bold text-black"
+				>
 					Sing In
 				</button>
 			</a>
@@ -111,6 +106,12 @@
 </div>
 
 <CreateNoteButton on:click={openModal} />
+
+<footer class="mt-auto py-4 text-center">
+	<p class="text-gray-400 font-bold dark:text-gray-200">
+		Created with ❤️ by <a class="underline hover:text-blue-600" href="https://github.com/IgorFroehner" target="_blank">Igor Froehner</a>
+	</p>
+</footer>
 
 <style>
 	.logo-text {

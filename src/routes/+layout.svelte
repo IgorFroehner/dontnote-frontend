@@ -13,7 +13,7 @@
 	};
 </script>
 
-<main class="bg-white dark:bg-gray-950">
+<main class="bg-white dark:bg-gray-950 min-h-screen flex flex-col">
 	<slot></slot>
 </main>
 

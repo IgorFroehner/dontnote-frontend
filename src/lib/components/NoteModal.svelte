@@ -60,9 +60,9 @@
 
 {#if $modalStore[0]}
 	<div class="backdrop"></div>
-	<div class="dialog relative w-1/2 rounded-lg border border-gray-300 bg-white dark:bg-gray-800">
+	<div class="dialog relative rounded-lg border border-gray-300 bg-white dark:bg-gray-800">
 		<button
-			class="close-button focus-visible:ring-0 focus:outline-none text-xl font-bold text-gray-900 dark:text-gray-400 outline-none hover:text-gray-600 dark:hover:text-gray-500"
+			class="close-button text-xl font-bold text-gray-900 outline-none hover:text-gray-600 focus:outline-none focus-visible:ring-0 dark:text-gray-400 dark:hover:text-gray-500"
 			on:click={() => modalStore.close()}
 		>
 			&times;
@@ -97,7 +97,7 @@
 					<div class="flex justify-end gap-2">
 						<button
 							type="button"
-							on:click={() => editing ? (mode = 'show') : modalStore.close()}
+							on:click={() => (editing ? (mode = 'show') : modalStore.close())}
 							class="rounded-lg bg-gray-300 px-4 py-2 text-black"
 						>
 							Cancel
@@ -138,7 +138,7 @@
 					</div>
 				</div>
 				<div class="note-content-show overflow-y-auto">
-					<p class="mt-2 dark:text-gray-200 whitespace-pre-wrap">{note.content}</p>
+					<p class="mt-2 whitespace-pre-wrap dark:text-gray-200">{note.content}</p>
 				</div>
 			{/if}
 		</div>
