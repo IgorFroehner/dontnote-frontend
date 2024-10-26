@@ -1,5 +1,9 @@
 <script lang="ts">
-	export let search = '';
+	interface Props {
+		search?: string;
+	}
+
+	let { search = $bindable('') }: Props = $props();
 </script>
 
 <div class="relative mt-3 w-2/3">

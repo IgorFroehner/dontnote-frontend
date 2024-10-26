@@ -1,11 +1,13 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import { postRequest } from '$lib/api/api-service';
 	import { authStore } from '$lib/stores/AuthStore';
 	import { get } from 'svelte/store';
 	import { redirect } from '@sveltejs/kit';
 
-	let userIdentifier = '';
-	let password = '';
+	let userIdentifier = $state('');
+	let password = $state('');
 
 	if (get(authStore) !== null) {
 		redirect(300, '/');
@@ -24,7 +26,7 @@
 <div class="flex flex-col justify-center items-center h-screen dark:text-white">
 	<h1 class="logo-text pb-3 pt-5 mb-5 dark:text-gray-200"><a href="/">DontNote</a></h1>
 
-	<form on:submit|preventDefault={signIn}>
+	<form onsubmit={preventDefault(signIn)}>
 		<label for="note-title" class="mt-2 block font-semibold pb-1 dark:text-white">Email or Username</label>
 		<input
 			id="note-title"

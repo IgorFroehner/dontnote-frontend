@@ -1,18 +1,23 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import { onDestroy, onMount, type SvelteComponent } from 'svelte';
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { addNote, removeNote, updateNote } from '$lib/stores/NotesStore';
 	import type { Note } from '$lib/types/note';
 
-	export let note: Note = {
+
+	interface Props {
+		note?: Note;
+		mode?: 'editor' | 'show';
+		parent: SvelteComponent;
+	}
+
+	let { note = $bindable({
 		id: undefined,
 		title: '',
 		content: ''
-	};
-	export let mode: 'editor' | 'show' = 'editor';
-	$: editing = note.id !== undefined;
-
-	export let parent: SvelteComponent;
+	}), mode = $bindable('editor'), parent }: Props = $props();
 
 	const modalStore = getModalStore();
 
@@ -56,6 +61,7 @@
 	onDestroy(() => {
 		document.body.classList.remove('overflow-hidden');
 	});
+	let editing = $derived(note.id !== undefined);
 </script>
 
 {#if $modalStore[0]}
@@ -63,7 +69,7 @@
 	<div class="dialog relative rounded-lg border border-gray-300 bg-white dark:bg-gray-800">
 		<button
 			class="close-button text-xl font-bold text-gray-900 outline-none hover:text-gray-600 focus:outline-none focus-visible:ring-0 dark:text-gray-400 dark:hover:text-gray-500"
-			on:click={() => modalStore.close()}
+			onclick={() => modalStore.close()}
 		>
 			&times;
 		</button>
@@ -74,7 +80,7 @@
 					{#if editing}Edit Note{:else}Create New Note{/if}
 				</h2>
 
-				<form on:submit|preventDefault={createNote}>
+				<form onsubmit={preventDefault(createNote)}>
 					<label for="note-title" class="mt-2 block font-semibold dark:text-white">Title</label>
 					<input
 						id="note-title"
@@ -97,7 +103,7 @@
 					<div class="flex justify-end gap-2">
 						<button
 							type="button"
-							on:click={() => (editing ? (mode = 'show') : modalStore.close())}
+							onclick={() => (editing ? (mode = 'show') : modalStore.close())}
 							class="rounded-lg bg-gray-300 px-4 py-2 text-black"
 						>
 							Cancel
@@ -111,7 +117,7 @@
 				<div class="flex items-center justify-between pb-4">
 					<h2 class="text-2xl font-bold dark:text-white">{note.title}</h2>
 					<div class="mx-2 flex gap-3">
-						<button on:click={() => (mode = 'editor')}>
+						<button onclick={() => (mode = 'editor')}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								class="fill-current text-gray-800 dark:text-gray-100"
@@ -123,7 +129,7 @@
 								/></svg
 							>
 						</button>
-						<button on:click={deleteNote}>
+						<button onclick={deleteNote}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								class="fill-current text-gray-800 dark:text-gray-100"

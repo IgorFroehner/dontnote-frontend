@@ -5,9 +5,13 @@
 
 	const modalStore = getModalStore();
 
-	export let note: Note;
-	$: title = note.title.length > 20 ? note.title.slice(0, 63) + '...' : note.title;
-	$: content = note.content.length > 500 ? note.content.slice(0, 500) + '...' : note.content;
+	interface Props {
+		note: Note;
+	}
+
+	let { note }: Props = $props();
+	let title = $derived(note.title.length > 20 ? note.title.slice(0, 63) + '...' : note.title);
+	let content = $derived(note.content.length > 500 ? note.content.slice(0, 500) + '...' : note.content);
 
 	const openModal = () => {
 		const modal: ModalSettings = {
@@ -23,8 +27,8 @@
 </script>
 
 <div
-	on:click={openModal}
-	on:keyup={openModal}
+	onclick={openModal}
+	onkeyup={openModal}
 	role="button"
 	tabindex="0"
 	class="mb-4 w-fit max-w-96 cursor-pointer rounded-lg border border-gray-300 bg-white p-4 shadow-md transition-shadow hover:shadow-lg dark:bg-gray-800 dark:shadow-md dark:shadow-gray-800 dark:hover:shadow-lg dark:hover:shadow-gray-800"

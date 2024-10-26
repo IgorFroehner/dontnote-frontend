@@ -1,7 +1,13 @@
+<script>
+	import { createBubbler } from 'svelte/legacy';
+
+	const bubble = createBubbler();
+</script>
+
 <!-- Plus Button -->
 <button
 	class="fixed bottom-10 right-10 flex h-16 w-16 items-center justify-center rounded-full bg-gray-600 text-white shadow-lg transition-colors hover:bg-gray-700"
-	on:click
+	onclick={bubble('click')}
 >
 	<svg
 		xmlns="http://www.w3.org/2000/svg"

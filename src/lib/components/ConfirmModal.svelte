@@ -29,8 +29,8 @@
 			<p class="mt-2 dark:text-white">{body}</p>
 
 			<div class="mt-4 flex justify-end gap-2">
-				<button on:click={onCancel} class="rounded-lg bg-gray-300 px-4 py-2 text-black">No</button>
-				<button on:click={onConfirm} class="rounded-lg bg-red-500 px-4 py-2 text-white">Yes</button>
+				<button onclick={onCancel} class="rounded-lg bg-gray-300 px-4 py-2 text-black">No</button>
+				<button onclick={onConfirm} class="rounded-lg bg-red-500 px-4 py-2 text-white">Yes</button>
 			</div>
 		</div>
 	</dialog>

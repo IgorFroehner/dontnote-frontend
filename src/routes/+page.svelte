@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import NoteCard from '$lib/components/NoteCard.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
@@ -10,8 +12,8 @@
 
 	const modalStore = getModalStore();
 
-	let notes: Note[] = [];
-	let search = '';
+	let notes: Note[] = $state([]);
+	let search = $state('');
 
 	const openModal = () => {
 		const modal: ModalSettings = {
@@ -22,13 +24,13 @@
 		modalStore.trigger(modal);
 	};
 
-	$: {
+	run(() => {
 		if (search) {
 			searchNotes(search).then((notes_result) => (notes = notes_result));
 		} else {
 			loadNotes().then((notes_loaded) => (notes = notes_loaded));
 		}
-	}
+	});
 </script>
 
 <header>
