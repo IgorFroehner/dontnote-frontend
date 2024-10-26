@@ -1,5 +1,4 @@
-import { authInfo } from '$lib/stores/AuthStore';
-import { notesStore } from '$lib/stores/NotesStore';
+import { authStore } from '$lib/stores/AuthStore';
 import { get } from 'svelte/store';
 import type { Note } from '$lib/types/note';
 import Fuse from 'fuse.js';
@@ -20,15 +19,16 @@ export const searchNotes = async (query: string) => {
 };
 
 export const loadNotes = async () => {
-	if (get(authInfo)) {
+	if (get(authStore)) {
 		// return notes from backend
-		return notesStore.set([]);
+		return [] as Note[];
 	}
 
 	if (typeof localStorage !== 'undefined') {
 		const notes = localStorage.getItem('notes');
-		return notes ? (JSON.parse(notes) as Note[]) : [];
+		return notes ? JSON.parse(notes) as Note[] : [] as Note[];
 	}
+	return [] as Note[];
 };
 
 export const saveNote = async (note: Note) => {
@@ -36,7 +36,7 @@ export const saveNote = async (note: Note) => {
 		note.id = `local-${Date.now().toString()}`;
 	}
 
-	if (get(authInfo)) {
+	if (get(authStore)) {
 		// save note to backend
 		return note;
 	}
@@ -62,7 +62,7 @@ export const saveNote = async (note: Note) => {
 export const deleteNote = async (note: Note) => {
 	if (!note.id) return;
 
-	if (get(authInfo)) {
+	if (get(authStore)) {
 		// delete note from backend
 		return;
 	}

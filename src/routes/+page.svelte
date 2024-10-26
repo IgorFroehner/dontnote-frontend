@@ -6,17 +6,12 @@
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { notesStore } from '$lib/stores/NotesStore';
 	import type { Note } from '$lib/types/note';
-	import Fuse from 'fuse.js';
-	import { searchNotes } from '$lib/services/notes-service';
+	import { loadNotes, searchNotes } from '$lib/services/notes-service';
 
 	const modalStore = getModalStore();
 
 	let notes: Note[] = [];
 	let search = '';
-
-	notesStore.subscribe((notesStored) => {
-		notes = notesStored;
-	});
 
 	const openModal = () => {
 		const modal: ModalSettings = {
@@ -29,11 +24,9 @@
 
 	$: {
 		if (search) {
-			searchNotes(search).then((notes_found) => notes = notes_found);
+			searchNotes(search).then((notes_result) => (notes = notes_result));
 		} else {
-			notesStore.subscribe((notesStored) => {
-				notes = notesStored;
-			});
+			loadNotes().then((notes_loaded) => (notes = notes_loaded));
 		}
 	}
 </script>
@@ -108,8 +101,12 @@
 <CreateNoteButton on:click={openModal} />
 
 <footer class="mt-auto py-4 text-center">
-	<p class="text-gray-400 font-bold dark:text-gray-200">
-		Created with ❤️ by <a class="underline hover:text-blue-600" href="https://github.com/IgorFroehner" target="_blank">Igor Froehner</a>
+	<p class="font-bold text-gray-400 dark:text-gray-400">
+		Created with ❤️ by <a
+			class="underline hover:text-blue-600"
+			href="https://github.com/IgorFroehner"
+			target="_blank">Igor Froehner</a
+		>
 	</p>
 </footer>
 
