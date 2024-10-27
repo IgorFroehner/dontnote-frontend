@@ -9,6 +9,7 @@
 	import { notesStore } from '$lib/stores/NotesStore';
 	import type { Note } from '$lib/types/note';
 	import { loadNotes, searchNotes } from '$lib/services/notes-service';
+	import Button from '$lib/components/Button.svelte';
 
 	const modalStore = getModalStore();
 
@@ -24,7 +25,7 @@
 		modalStore.trigger(modal);
 	};
 
-	run(() => {
+	$effect(() => {
 		if (search) {
 			searchNotes(search).then((notes_result) => (notes = notes_result));
 		} else {
@@ -43,12 +44,11 @@
 			<ThemeToggle />
 
 			<a href="/sign_in">
-				<button
-					type="button"
-					class="mt-3 w-24 rounded-lg bg-gray-300 px-4 py-2 font-bold text-black"
-				>
-					Sing In
-				</button>
+				<div class="mt-3">
+					<Button variant="primary" size="medium">
+						Sing In
+					</Button>
+				</div>
 			</a>
 		</div>
 	</nav>
@@ -56,7 +56,7 @@
 
 <div class="container mx-auto mt-5 min-h-full dark:bg-gray-950">
 	<div class="border-black-200 container flex flex-wrap items-start gap-4 rounded-md p-4">
-		{#each notes as note}
+		{#each $notesStore as note}
 			<NoteCard {note} />
 		{/each}
 		{#if $notesStore.length === 0}

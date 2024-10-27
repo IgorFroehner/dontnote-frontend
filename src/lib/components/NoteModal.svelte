@@ -5,7 +5,7 @@
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { addNote, removeNote, updateNote } from '$lib/stores/NotesStore';
 	import type { Note } from '$lib/types/note';
-
+	import Button from '$lib/components/Button.svelte';
 
 	interface Props {
 		note?: Note;
@@ -13,11 +13,15 @@
 		parent: SvelteComponent;
 	}
 
-	let { note = $bindable({
-		id: undefined,
-		title: '',
-		content: ''
-	}), mode = $bindable('editor'), parent }: Props = $props();
+	let {
+		note = $bindable({
+			id: undefined,
+			title: '',
+			content: ''
+		}),
+		mode = $bindable('editor'),
+		parent
+	}: Props = $props();
 
 	const modalStore = getModalStore();
 
@@ -95,22 +99,23 @@
 					<textarea
 						id="note-content"
 						bind:value={note.content}
-						class="block h-96 w-full rounded-md border p-2 dark:bg-gray-700 dark:text-white"
+						class="mb-2 block h-96 w-full rounded-md border p-2 dark:bg-gray-700 dark:text-white"
 						placeholder="Enter note content"
 						required
 					></textarea>
 
-					<div class="flex justify-end gap-2">
-						<button
+					<div class="mb-2 flex justify-end gap-2">
+						<Button
 							type="button"
-							onclick={() => (editing ? (mode = 'show') : modalStore.close())}
-							class="rounded-lg bg-gray-300 px-4 py-2 text-black"
+							variant="secondary"
+							size="large"
+							onClick={() => (editing ? (mode = 'show') : modalStore.close())}
 						>
 							Cancel
-						</button>
-						<button type="submit" class="rounded-lg bg-gray-600 px-4 py-2 text-white">
+						</Button>
+						<Button type="submit" variant="primary" size="large">
 							{#if editing}Save{:else}Create{/if}
-						</button>
+						</Button>
 					</div>
 				</form>
 			{:else if mode === 'show'}
@@ -178,8 +183,5 @@
 		width: 100%;
 		height: 100%;
 		z-index: 10;
-	}
-	button {
-		margin-top: 10px;
 	}
 </style>

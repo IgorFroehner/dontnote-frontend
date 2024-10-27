@@ -16,7 +16,7 @@
 	}
 
 	function toggleTheme() {
-		theme = theme === 'dark' ? 'light' : 'dark'; // Toggle theme based on darkMode
+		theme = darkMode ? 'light' : 'dark'; // Toggle theme based on darkMode
 		localStorage.setItem('theme', theme);
 		applyTheme();
 	}

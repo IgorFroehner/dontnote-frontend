@@ -5,6 +5,7 @@
 	import { authStore } from '$lib/stores/AuthStore';
 	import { get } from 'svelte/store';
 	import { redirect } from '@sveltejs/kit';
+	import Button from '$lib/components/Button.svelte';
 
 	let userIdentifier = $state('');
 	let password = $state('');
@@ -46,9 +47,9 @@
 		>
 
 		<div class="flex justify-end gap-2 mt-4 pb-5">
-			<button type="submit" class="rounded-lg bg-gray-600 px-4 py-1 text-white">
-				Sing In
-			</button>
+			<Button type="submit">
+				Sign In
+			</Button>
 		</div>
 	</form>
 </div>
