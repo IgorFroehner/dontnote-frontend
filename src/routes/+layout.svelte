@@ -4,7 +4,7 @@
 	initializeStores();
 
 	import NoteModal from '$lib/components/NoteModal.svelte';
-	import { initializeStores, Modal, type ModalComponent } from '@skeletonlabs/skeleton';
+	import { initializeStores, Modal, type ModalComponent, Toast } from '@skeletonlabs/skeleton';
 	import ConfirmModal from '$lib/components/ConfirmModal.svelte';
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -23,3 +23,4 @@
 </main>
 
 <Modal components={modalRegistry}/>
+<Toast />

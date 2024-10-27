@@ -1,33 +1,50 @@
 <script lang="ts">
-	import { preventDefault } from 'svelte/legacy';
-
 	import { postRequest } from '$lib/api/api-service';
-	import { authStore } from '$lib/stores/AuthStore';
+	import { authStore, setAuthInfo } from '$lib/stores/AuthStore';
 	import { get } from 'svelte/store';
-	import { redirect } from '@sveltejs/kit';
 	import Button from '$lib/components/Button.svelte';
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	import { goto } from '$app/navigation';
 
 	let userIdentifier = $state('');
 	let password = $state('');
+	let loading = $state(false);
+
+	const toastStore = getToastStore();
 
 	if (get(authStore) !== null) {
-		redirect(300, '/');
+		goto('/');
 	}
 
 	const signIn = async () => {
-		const response = await postRequest('http://localhost:8080/api/users/sign_in', {
+		loading = true;
+		await postRequest('users/sign_in', {
 			user_identifier: userIdentifier,
 			password
+		}).then((response) => {
+			toastStore.trigger({
+				message: 'Sign in successful',
+				timeout: 1000,
+			});
+			setAuthInfo(response);
+			goto('/');
+		}).catch((error) => {
+			console.error(error);
+
+			toastStore.trigger({
+				message: 'Sign in failed',
+				timeout: 1000,
+			});
 		});
 
-		console.log(response);
+		loading = false;
 	};
 </script>
 
 <div class="flex flex-col justify-center items-center h-screen dark:text-white">
 	<h1 class="logo-text pb-3 pt-5 mb-5 dark:text-gray-200"><a href="/">DontNote</a></h1>
 
-	<form onsubmit={preventDefault(signIn)}>
+	<form onsubmit={signIn}>
 		<label for="note-title" class="mt-2 block font-semibold pb-1 dark:text-white">Email or Username</label>
 		<input
 			id="note-title"
@@ -47,7 +64,7 @@
 		>
 
 		<div class="flex justify-end gap-2 mt-4 pb-5">
-			<Button type="submit">
+			<Button type="submit" loading={loading}>
 				Sign In
 			</Button>
 		</div>

@@ -18,7 +18,7 @@
 			type: 'component',
 			component: 'noteModal',
 			meta: {
-				note,
+				note: { ...note },
 				mode: 'show'
 			}
 		};

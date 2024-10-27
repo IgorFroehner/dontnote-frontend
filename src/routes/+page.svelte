@@ -1,35 +1,52 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import NoteCard from '$lib/components/NoteCard.svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import CreateNoteButton from '$lib/components/CreateNoteButton.svelte';
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { notesStore } from '$lib/stores/NotesStore';
-	import type { Note } from '$lib/types/note';
+	import { authStore } from '$lib/stores/AuthStore';
 	import { loadNotes, searchNotes } from '$lib/services/notes-service';
 	import Button from '$lib/components/Button.svelte';
+	import type { Note } from '$lib/types/note';
 
 	const modalStore = getModalStore();
 
-	let notes: Note[] = $state([]);
 	let search = $state('');
 
-	const openModal = () => {
+	const openModal = (note?: Note, mode?: 'editor' | 'show') => {
+		mode = mode || 'editor';
 		const modal: ModalSettings = {
 			type: 'component',
 			component: 'noteModal',
-			meta: {}
+			meta: {
+				note,
+				mode
+			}
 		};
 		modalStore.trigger(modal);
 	};
 
+	const onkeydown = (e: KeyboardEvent) => {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+
+			if ($notesStore.length === 0) {
+				openModal({
+					title: search,
+					content: ''
+				}, 'editor');
+				return;
+			}
+			openModal({ ...$notesStore[0] }, 'show');
+		}
+	};
+
 	$effect(() => {
 		if (search) {
-			searchNotes(search).then((notes_result) => (notes = notes_result));
+			searchNotes(search).then((notes_result) => ($notesStore = notes_result));
 		} else {
-			loadNotes().then((notes_loaded) => (notes = notes_loaded));
+			loadNotes().then((notes_loaded) => ($notesStore = notes_loaded));
 		}
 	});
 </script>
@@ -39,17 +56,25 @@
 		<div class="flex items-center justify-between gap-3">
 			<h1 class="logo-text pb-3 pl-5 pt-5 dark:text-gray-200"><a href="/">DontNote</a></h1>
 
-			<SearchBar bind:search />
+			<SearchBar bind:search onkeydown={onkeydown}/>
 
 			<ThemeToggle />
 
-			<a href="/sign_in">
 				<div class="mt-3">
-					<Button variant="primary" size="medium">
-						Sing In
-					</Button>
+					{#if $authStore === null}
+						<a href="/sign_in">
+							<Button variant="primary" size="medium">
+								Sing In
+							</Button>
+						</a>
+					{:else}
+						<a href="/sign_off">
+							<Button variant="secondary" size="medium">
+								Sign Off
+							</Button>
+						</a>
+					{/if}
 				</div>
-			</a>
 		</div>
 	</nav>
 </header>
@@ -59,7 +84,7 @@
 		{#each $notesStore as note}
 			<NoteCard {note} />
 		{/each}
-		{#if $notesStore.length === 0}
+		{#if $notesStore.length === 0 && search === ''}
 			<div class="flex h-96 w-screen flex-col items-center justify-center dark:text-white">
 				<p class="mb-5 text-2xl font-bold text-gray-700 dark:text-gray-200">
 					Your notes as you've never experienced.
@@ -96,11 +121,22 @@
 					></path></svg
 				>
 			</div>
+		{:else if $notesStore.length === 0 && search !== ''}
+			<div class="flex h-96 w-screen flex-col items-center justify-center dark:text-white">
+				<p class="mb-5 text-2xl font-bold text-gray-700 dark:text-gray-200">
+					No notes found.
+				</p>
+
+				<p class="text-lg text-gray-700 dark:text-gray-400">
+					There are no notes with the title <span class="font-bold">"{search}"</span>.<br />
+					Press enter to create a new note with this title.
+				</p>
+			</div>
 		{/if}
 	</div>
 </div>
 
-<CreateNoteButton on:click={openModal} />
+<CreateNoteButton on:click={() => openModal()} />
 
 <footer class="mt-auto py-4 text-center">
 	<p class="font-bold text-gray-400 dark:text-gray-400">

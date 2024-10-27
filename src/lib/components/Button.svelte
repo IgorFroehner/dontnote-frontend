@@ -10,10 +10,12 @@
 		variant?: ButtonVariant;
 		onClick?: (event: MouseEvent) => void;
 		loading?: boolean;
+		disabled?: boolean;
 		children: HTMLButtonAttributes['children'];
 	};
 
-	let { size, type, variant, loading, onClick, children, ...restProps }: ButtonProps = $props();
+	let { size, type, variant, loading, onClick, disabled, children, ...restProps }: ButtonProps =
+		$props();
 
 	const sizeClasses: Record<ButtonSize, string> = {
 		small: 'rounded-sm px-2 py-1 text-sm',
@@ -32,7 +34,8 @@
 
 <button
 	{type}
-	class={`${buttonSizeClass} ${buttonVariantClass} ${loading ? 'animate-pulse' : ''} hover:opacity-90`}
+	class={`${buttonSizeClass} ${buttonVariantClass} ${loading ? 'animate-pulse' : ''} overflow-hidden text-ellipsis whitespace-nowrap hover:opacity-90`}
+	disabled={loading || disabled}
 	onclick={onClick}
 	{...restProps}
 >

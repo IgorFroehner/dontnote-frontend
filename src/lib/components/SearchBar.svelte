@@ -1,9 +1,10 @@
 <script lang="ts">
 	interface Props {
 		search?: string;
+		onkeydown?: (event: KeyboardEvent) => void;
 	}
 
-	let { search = $bindable('') }: Props = $props();
+	let { search = $bindable(''), onkeydown }: Props = $props();
 </script>
 
 <div class="relative mt-3 w-2/3">
@@ -12,6 +13,7 @@
 		class="h-12 w-full rounded-lg bg-gray-200 pl-3 pr-12 text-2xl font-medium opacity-80 focus:outline-none"
 		placeholder="Search..."
 		bind:value={search}
+		onkeydown={onkeydown}
 	/>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"

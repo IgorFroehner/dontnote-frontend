@@ -14,3 +14,8 @@ export const setAuthInfo = (authInfo: AuthInfo) => {
 	localStorage.setItem('authInfo', JSON.stringify(authInfo));
 	authStore.set(authInfo);
 };
+
+export const clearAuthInfo = () => {
+	localStorage.removeItem('authInfo');
+	authStore.set(null);
+};

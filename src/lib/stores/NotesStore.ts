@@ -22,7 +22,7 @@ export const addNote = (note: Note) => {
 export const updateNote = (note: Note) => {
 	saveNote(note).then((note) => {
 		notesStore.update((currentNotes) => {
-			const index = currentNotes.findIndex((n) => n.id === note.id);
+			const index = currentNotes.findIndex((n) => n.uuid === note.uuid);
 			if (index > -1) {
 				currentNotes[index] = note;
 			}
@@ -33,6 +33,6 @@ export const updateNote = (note: Note) => {
 
 export const removeNote = (note: Note) => {
 	deleteNote(note).then(() => {
-		notesStore.update((currentNotes) => currentNotes.filter((n) => n.id !== note.id));
+		notesStore.update((currentNotes) => currentNotes.filter((n) => n.uuid !== note.uuid));
 	});
 };

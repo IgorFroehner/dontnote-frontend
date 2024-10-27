@@ -2,9 +2,16 @@ import { authStore } from '$lib/stores/AuthStore';
 import { get } from 'svelte/store';
 import type { Note } from '$lib/types/note';
 import Fuse from 'fuse.js';
+import { getRequest } from '$lib/api/api-service';
 
 export const searchNotes = async (query: string) => {
-	const notes = await loadNotes();
+	if (get(authStore)) {
+		const response = await getRequest(`notes?search=${query}`);
+
+		return response as Note[];
+	}
+
+	const notes = loadNotesFromLocalStorage();
 
 	const fuseOptions = {
 		keys: [
@@ -20,20 +27,28 @@ export const searchNotes = async (query: string) => {
 
 export const loadNotes = async () => {
 	if (get(authStore)) {
-		// return notes from backend
-		return [] as Note[];
+		const response = await getRequest('notes');
+
+		return response as Note[];
 	}
 
+	return loadNotesFromLocalStorage();
+};
+
+const loadNotesFromLocalStorage = () => {
 	if (typeof localStorage !== 'undefined') {
 		const notes = localStorage.getItem('notes');
 		return notes ? JSON.parse(notes) as Note[] : [] as Note[];
 	}
 	return [] as Note[];
-};
+}
 
 export const saveNote = async (note: Note) => {
-	if (note.id === undefined) {
-		note.id = `local-${Date.now().toString()}`;
+	if (note.uuid === undefined) {
+		const uuid = self.crypto.randomUUID();
+		note.uuid = `local-${uuid}`;
+		note.createdAt = new Date().toISOString();
+		note.updatedAt = new Date().toISOString();
 	}
 
 	if (get(authStore)) {
@@ -45,8 +60,9 @@ export const saveNote = async (note: Note) => {
 		const notes = localStorage.getItem('notes');
 		if (notes) {
 			const parsedNotes = JSON.parse(notes) as Note[];
-			const index = parsedNotes.findIndex((n) => n.id === note.id);
+			const index = parsedNotes.findIndex((n) => n.uuid === note.uuid);
 			if (index > -1) {
+				note.updatedAt = new Date().toISOString();
 				parsedNotes[index] = note;
 			} else {
 				parsedNotes.push(note);
@@ -60,7 +76,7 @@ export const saveNote = async (note: Note) => {
 };
 
 export const deleteNote = async (note: Note) => {
-	if (!note.id) return;
+	if (!note.uuid) return;
 
 	if (get(authStore)) {
 		// delete note from backend
@@ -71,7 +87,7 @@ export const deleteNote = async (note: Note) => {
 		const notes = localStorage.getItem('notes');
 		if (notes) {
 			const parsedNotes = JSON.parse(notes) as Note[];
-			const index = parsedNotes.findIndex((n) => n.id === note.id);
+			const index = parsedNotes.findIndex((n) => n.uuid === note.uuid);
 			if (index > -1) {
 				parsedNotes.splice(index, 1);
 				localStorage.setItem('notes', JSON.stringify(parsedNotes));

@@ -26,7 +26,7 @@
 	const modalStore = getModalStore();
 
 	function createNote() {
-		if (note.id === undefined) {
+		if (note.uuid === undefined) {
 			addNote(note);
 		} else {
 			updateNote(note);
@@ -65,7 +65,7 @@
 	onDestroy(() => {
 		document.body.classList.remove('overflow-hidden');
 	});
-	let editing = $derived(note.id !== undefined);
+	let editing = $derived(note.uuid !== undefined);
 </script>
 
 {#if $modalStore[0]}
