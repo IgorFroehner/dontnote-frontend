@@ -11,7 +11,9 @@
 
 	let { note }: Props = $props();
 	let title = $derived(note.title.length > 20 ? note.title.slice(0, 63) + '...' : note.title);
-	let content = $derived(note.content.length > 500 ? note.content.slice(0, 500) + '...' : note.content);
+	let content = $derived(
+		note.content.length > 500 ? note.content.slice(0, 500) + '...' : note.content
+	);
 
 	const openModal = () => {
 		const modal: ModalSettings = {

@@ -2,7 +2,7 @@
 	const isBrowser = typeof window !== 'undefined';
 
 	let theme = $state(isBrowser ? localStorage.getItem('theme') || 'light' : 'light');
-	let darkMode = $derived(theme === "dark");
+	let darkMode = $derived(theme === 'dark');
 
 	function applyTheme() {
 		if (

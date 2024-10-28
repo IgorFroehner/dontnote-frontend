@@ -4,13 +4,13 @@ Your notes as you've never experienced.
 
 ### Features
 
-* General
+- General
   - [ ] Better UI in cellphones
-* Local
-    - [x] Create, edit, and delete notes locally
-    - [ ] Markdown editor
-    - [ ] Export notes
-    - 
+- Local
+  - [x] Create, edit, and delete notes locally
+  - [ ] Markdown editor
+  - [ ] Export notes
+  -
 
 ## Developing
 

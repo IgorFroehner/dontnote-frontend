@@ -15,6 +15,6 @@
 
 	toastStore.trigger({
 		message: 'Sign off successful',
-		timeout: 1000,
+		timeout: 1000
 	});
 </script>

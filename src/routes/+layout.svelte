@@ -18,9 +18,9 @@
 	};
 </script>
 
-<main class="bg-white dark:bg-gray-950 min-h-screen flex flex-col">
+<main class="flex min-h-screen flex-col bg-white dark:bg-gray-950">
 	{@render children?.()}
 </main>
 
-<Modal components={modalRegistry}/>
+<Modal components={modalRegistry} />
 <Toast />

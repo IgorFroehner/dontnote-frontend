@@ -1,13 +1,15 @@
-<script>
-	import { createBubbler } from 'svelte/legacy';
+<script lang="ts">
+	type CreateNoteButtonProps = {
+		onclick: () => void;
+	};
 
-	const bubble = createBubbler();
+	let { onclick }: CreateNoteButtonProps = $props();
 </script>
 
-<!-- Plus Button -->
 <button
 	class="fixed bottom-10 right-10 flex h-16 w-16 items-center justify-center rounded-full bg-gray-600 text-white shadow-lg transition-colors hover:bg-gray-700"
-	onclick={bubble('click')}
+	{onclick}
+	aria-label="Create Note"
 >
 	<svg
 		xmlns="http://www.w3.org/2000/svg"

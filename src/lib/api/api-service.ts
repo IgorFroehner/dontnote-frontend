@@ -11,7 +11,7 @@ export const getRequest = async (endpoint: string) => {
 
 	const response = await fetch(`${API_URL}/${endpoint}`, {
 		headers: {
-			'Authorization': `Bearer ${authInfo.token}`
+			Authorization: `Bearer ${authInfo.token}`
 		}
 	});
 
@@ -20,7 +20,7 @@ export const getRequest = async (endpoint: string) => {
 		throw 'Unauthorized';
 	}
 	return response.json();
-}
+};
 
 export const postRequest = async (endpoint: string, data: any) => {
 	const response = await fetch(`${API_URL}/${endpoint}`, {
@@ -32,4 +32,4 @@ export const postRequest = async (endpoint: string, data: any) => {
 	});
 
 	return response.json();
-}
+};

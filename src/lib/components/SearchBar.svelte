@@ -13,7 +13,7 @@
 		class="h-12 w-full rounded-lg bg-gray-200 pl-3 pr-12 text-2xl font-medium opacity-80 focus:outline-none"
 		placeholder="Search..."
 		bind:value={search}
-		onkeydown={onkeydown}
+		{onkeydown}
 	/>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"

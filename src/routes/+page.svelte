@@ -32,10 +32,13 @@
 			e.preventDefault();
 
 			if ($notesStore.length === 0) {
-				openModal({
-					title: search,
-					content: ''
-				}, 'editor');
+				openModal(
+					{
+						title: search,
+						content: ''
+					},
+					'editor'
+				);
 				return;
 			}
 			openModal({ ...$notesStore[0] }, 'show');
@@ -56,25 +59,21 @@
 		<div class="flex items-center justify-between gap-3">
 			<h1 class="logo-text pb-3 pl-5 pt-5 dark:text-gray-200"><a href="/">DontNote</a></h1>
 
-			<SearchBar bind:search onkeydown={onkeydown}/>
+			<SearchBar bind:search {onkeydown} />
 
 			<ThemeToggle />
 
-				<div class="mt-3">
-					{#if $authStore === null}
-						<a href="/sign_in">
-							<Button variant="primary" size="medium">
-								Sing In
-							</Button>
-						</a>
-					{:else}
-						<a href="/sign_off">
-							<Button variant="secondary" size="medium">
-								Sign Off
-							</Button>
-						</a>
-					{/if}
-				</div>
+			<div class="mt-3">
+				{#if $authStore === null}
+					<a href="/sign_in">
+						<Button variant="primary" size="medium">Sing In</Button>
+					</a>
+				{:else}
+					<a href="/sign_off">
+						<Button variant="secondary" size="medium">Sign Off</Button>
+					</a>
+				{/if}
+			</div>
 		</div>
 	</nav>
 </header>
@@ -123,9 +122,7 @@
 			</div>
 		{:else if $notesStore.length === 0 && search !== ''}
 			<div class="flex h-96 w-screen flex-col items-center justify-center dark:text-white">
-				<p class="mb-5 text-2xl font-bold text-gray-700 dark:text-gray-200">
-					No notes found.
-				</p>
+				<p class="mb-5 text-2xl font-bold text-gray-700 dark:text-gray-200">No notes found.</p>
 
 				<p class="text-lg text-gray-700 dark:text-gray-400">
 					There are no notes with the title <span class="font-bold">"{search}"</span>.<br />
@@ -136,7 +133,7 @@
 	</div>
 </div>
 
-<CreateNoteButton on:click={() => openModal()} />
+<CreateNoteButton onclick={() => openModal()} />
 
 <footer class="mt-auto py-4 text-center">
 	<p class="font-bold text-gray-400 dark:text-gray-400">

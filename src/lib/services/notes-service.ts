@@ -38,10 +38,10 @@ export const loadNotes = async () => {
 const loadNotesFromLocalStorage = () => {
 	if (typeof localStorage !== 'undefined') {
 		const notes = localStorage.getItem('notes');
-		return notes ? JSON.parse(notes) as Note[] : [] as Note[];
+		return notes ? (JSON.parse(notes) as Note[]) : ([] as Note[]);
 	}
 	return [] as Note[];
-}
+};
 
 export const saveNote = async (note: Note) => {
 	if (note.uuid === undefined) {

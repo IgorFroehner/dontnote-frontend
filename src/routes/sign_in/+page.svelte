@@ -21,31 +21,35 @@
 		await postRequest('users/sign_in', {
 			user_identifier: userIdentifier,
 			password
-		}).then((response) => {
-			toastStore.trigger({
-				message: 'Sign in successful',
-				timeout: 1000,
-			});
-			setAuthInfo(response);
-			goto('/');
-		}).catch((error) => {
-			console.error(error);
+		})
+			.then((response) => {
+				toastStore.trigger({
+					message: 'Sign in successful',
+					timeout: 1000
+				});
+				setAuthInfo(response);
+				goto('/');
+			})
+			.catch((error) => {
+				console.error(error);
 
-			toastStore.trigger({
-				message: 'Sign in failed',
-				timeout: 1000,
+				toastStore.trigger({
+					message: 'Sign in failed',
+					timeout: 1000
+				});
 			});
-		});
 
 		loading = false;
 	};
 </script>
 
-<div class="flex flex-col justify-center items-center h-screen dark:text-white">
-	<h1 class="logo-text pb-3 pt-5 mb-5 dark:text-gray-200"><a href="/">DontNote</a></h1>
+<div class="flex h-screen flex-col items-center justify-center dark:text-white">
+	<h1 class="logo-text mb-5 pb-3 pt-5 dark:text-gray-200"><a href="/">DontNote</a></h1>
 
 	<form onsubmit={signIn}>
-		<label for="note-title" class="mt-2 block font-semibold pb-1 dark:text-white">Email or Username</label>
+		<label for="note-title" class="mt-2 block pb-1 font-semibold dark:text-white"
+			>Email or Username</label
+		>
 		<input
 			id="note-title"
 			type="text"
@@ -54,26 +58,24 @@
 			required
 		/>
 
-		<label for="password" class="mt-4 block font-semibold pb-1 dark:text-white">Password</label>
+		<label for="password" class="mt-4 block pb-1 font-semibold dark:text-white">Password</label>
 		<input
 			id="password"
 			bind:value={password}
 			type="password"
 			class="block w-80 rounded-md border p-2 dark:bg-gray-700 dark:text-white"
 			required
-		>
+		/>
 
-		<div class="flex justify-end gap-2 mt-4 pb-5">
-			<Button type="submit" loading={loading}>
-				Sign In
-			</Button>
+		<div class="mt-4 flex justify-end gap-2 pb-5">
+			<Button type="submit" {loading}>Sign In</Button>
 		</div>
 	</form>
 </div>
 
 <style>
-  .logo-text {
-    font-size: 2.5em;
-    font-weight: bold;
-  }
+	.logo-text {
+		font-size: 2.5em;
+		font-weight: bold;
+	}
 </style>
