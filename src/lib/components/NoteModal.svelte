@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { preventDefault } from 'svelte/legacy';
-
 	import { onDestroy, onMount, type SvelteComponent } from 'svelte';
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { addNote, removeNote, updateNote } from '$lib/stores/NotesStore';
@@ -84,7 +82,7 @@
 					{#if editing}Edit Note{:else}Create New Note{/if}
 				</h2>
 
-				<form onsubmit={preventDefault(createNote)}>
+				<form onsubmit={e => {e.preventDefault(); createNote()}}>
 					<label for="note-title" class="mt-2 block font-semibold dark:text-white">Title</label>
 					<input
 						id="note-title"

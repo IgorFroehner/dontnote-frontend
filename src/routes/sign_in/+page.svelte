@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { postRequest } from '$lib/api/api-service';
+	import { signInRequest } from '$lib/api/api-service';
 	import { authStore, setAuthInfo } from '$lib/stores/AuthStore';
 	import { get } from 'svelte/store';
 	import Button from '$lib/components/Button.svelte';
@@ -18,7 +18,7 @@
 
 	const signIn = async () => {
 		loading = true;
-		await postRequest('users/sign_in', {
+		await signInRequest('users/sign_in', {
 			user_identifier: userIdentifier,
 			password
 		})

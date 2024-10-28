@@ -3,7 +3,7 @@ import { get } from 'svelte/store';
 
 const { VITE_API_URL: API_URL } = import.meta.env;
 
-export const getRequest = async (endpoint: string) => {
+export async function getRequest(endpoint: string) {
 	const authInfo = get(authStore);
 	if (authInfo === null) {
 		throw 'No token found';
@@ -20,9 +20,31 @@ export const getRequest = async (endpoint: string) => {
 		throw 'Unauthorized';
 	}
 	return response.json();
-};
+}
 
-export const postRequest = async (endpoint: string, data: any) => {
+export async function postRequest(endpoint: string, body: any) {
+	const authInfo = get(authStore);
+	if (authInfo === null) {
+		throw 'No token found';
+	}
+
+	const response = await fetch(`${API_URL}/${endpoint}`, {
+		method: 'POST',
+		headers: {
+			Authorization: `Bearer ${authInfo.token}`,
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(body),
+	});
+
+	if (response.status === 401) {
+		clearAuthInfo();
+		throw 'Unauthorized';
+	}
+	return response.json();
+}
+
+export async function signInRequest(endpoint: string, data: any) {
 	const response = await fetch(`${API_URL}/${endpoint}`, {
 		method: 'POST',
 		headers: {
@@ -32,4 +54,4 @@ export const postRequest = async (endpoint: string, data: any) => {
 	});
 
 	return response.json();
-};
+}

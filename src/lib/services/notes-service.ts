@@ -2,7 +2,7 @@ import { authStore } from '$lib/stores/AuthStore';
 import { get } from 'svelte/store';
 import type { Note } from '$lib/types/note';
 import Fuse from 'fuse.js';
-import { getRequest } from '$lib/api/api-service';
+import { getRequest, postRequest } from '$lib/api/api-service';
 
 export const searchNotes = async (query: string) => {
 	if (get(authStore)) {
@@ -52,8 +52,9 @@ export const saveNote = async (note: Note) => {
 	}
 
 	if (get(authStore)) {
-		// save note to backend
-		return note;
+		const response = await postRequest('notes', note);
+
+		return response as Note;
 	}
 
 	if (typeof localStorage !== 'undefined') {
