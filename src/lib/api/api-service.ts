@@ -44,14 +44,24 @@ export async function postRequest(endpoint: string, body: any) {
 	return response.json();
 }
 
+export async function signUpRequest(endpoint: string, data: any) {
+	return await fetch(`${API_URL}/${endpoint}`,
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		}
+	);
+}
+
 export async function signInRequest(endpoint: string, data: any) {
-	const response = await fetch(`${API_URL}/${endpoint}`, {
+	return await fetch(`${API_URL}/${endpoint}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(data)
 	});
-
-	return response.json();
 }

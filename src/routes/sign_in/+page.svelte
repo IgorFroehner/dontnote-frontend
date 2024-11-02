@@ -5,10 +5,12 @@
 	import Button from '$lib/components/Button.svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
+	import type { AuthInfo } from '$lib/types/user';
 
 	let userIdentifier = $state('');
 	let password = $state('');
 	let loading = $state(false);
+	let error = $state('');
 
 	const toastStore = getToastStore();
 
@@ -18,26 +20,30 @@
 
 	const signIn = async () => {
 		loading = true;
-		await signInRequest('users/sign_in', {
+		const response = await signInRequest('users/sign_in', {
 			user_identifier: userIdentifier,
 			password
 		})
-			.then((response) => {
-				toastStore.trigger({
-					message: 'Sign in successful',
-					timeout: 1000
-				});
-				setAuthInfo(response);
-				goto('/');
-			})
-			.catch((error) => {
-				console.error(error);
 
-				toastStore.trigger({
-					message: 'Sign in failed',
-					timeout: 1000
-				});
+		if (response.ok) {
+			const authInfo = await response.json() as AuthInfo;
+
+			toastStore.trigger({
+				message: 'Sign in successful',
+				timeout: 2000,
+				background: 'bg-green-500'
 			});
+			setAuthInfo(authInfo);
+			await goto('/');
+			return;
+		}
+
+		error = 'Invalid email or password';
+		toastStore.trigger({
+			message: 'Sign in failed',
+			timeout: 2000,
+			classes: 'bg-red-500'
+		});
 
 		loading = false;
 	};
@@ -67,9 +73,20 @@
 			required
 		/>
 
-		<div class="mt-4 flex justify-end gap-2 pb-5">
+		{#if error}
+			<p class="text-center text-red-500 mt-2">
+				{error}
+			</p>
+		{/if}
+
+		<div class="mt-4 flex justify-end gap-5 mb-4">
 			<Button type="submit" {loading}>Sign In</Button>
 		</div>
+
+		<p class="text-center">
+			<strong>Dont</strong> have an account?
+			<a href="/sign_up" class="underline hover:text-blue-600">Sign Up</a>
+		</p>
 	</form>
 </div>
 

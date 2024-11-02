@@ -10,11 +10,12 @@
 		goto('/');
 	}
 
-	clearAuthInfo();
-	goto('/');
-
 	toastStore.trigger({
 		message: 'Sign off successful',
-		timeout: 1000
+		timeout: 2000,
+		background: 'bg-green-500'
 	});
+
+	clearAuthInfo();
+	goto('/');
 </script>
