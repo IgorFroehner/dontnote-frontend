@@ -25,7 +25,8 @@
 
 	const variantClasses: Record<ButtonVariant, string> = {
 		primary: 'bg-gray-600 text-white dark:bg-white dark:text-gray-600 font-bold',
-		secondary: 'bg-white text-gray-600 dark:bg-gray-600 dark:text-white font-bold'
+		secondary:
+			'bg-white border border-1 border-gray-600 text-gray-600 dark:bg-gray-600 dark:text-white font-bold'
 	};
 
 	let buttonSizeClass = sizeClasses[size || 'medium'];

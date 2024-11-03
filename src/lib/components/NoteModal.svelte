@@ -23,7 +23,25 @@
 
 	const modalStore = getModalStore();
 
+	let titleError = $state('');
+	let contentError = $state('');
+	let saveEnabled = $state(false);
+
+	const validNote = (note: Note) => {
+		if (note.title.length < 3 || note.content.length < 3) {
+			return false;
+		}
+		if (note.title.length > 100 || note.content.length > 1000) {
+			return false;
+		}
+		return true;
+	};
+
 	function createNote() {
+		if (!validNote(note)) {
+			return;
+		}
+
 		if (note.uuid === undefined) {
 			addNote(note);
 		} else {
@@ -60,6 +78,23 @@
 		modalStore.close();
 	};
 
+	$effect(() => {
+		if (note.title.length > 100) {
+			titleError = 'Title must be less than 100 characters';
+		} else {
+			titleError = '';
+		}
+		if (note.content.length > 1000) {
+			contentError = 'Content must be less than 1000 characters';
+		} else {
+			contentError = '';
+		}
+	});
+
+	$effect(() => {
+		saveEnabled = validNote(note);
+	});
+
 	onDestroy(() => {
 		document.body.classList.remove('overflow-hidden');
 	});
@@ -82,7 +117,12 @@
 					{#if editing}Edit Note{:else}Create New Note{/if}
 				</h2>
 
-				<form onsubmit={e => {e.preventDefault(); createNote()}}>
+				<form
+					onsubmit={(e) => {
+						e.preventDefault();
+						createNote();
+					}}
+				>
 					<label for="note-title" class="mt-2 block font-semibold dark:text-white">Title</label>
 					<input
 						id="note-title"
@@ -92,6 +132,9 @@
 						placeholder="Enter note title"
 						required
 					/>
+					{#if titleError}
+						<p class="mt-1 text-sm text-red-500">{titleError}</p>
+					{/if}
 
 					<label for="note-content" class="mt-4 block font-semibold dark:text-white">Content</label>
 					<textarea
@@ -101,8 +144,11 @@
 						placeholder="Enter note content"
 						required
 					></textarea>
+					{#if contentError}
+						<p class="mt-1 text-sm text-red-500">{contentError}</p>
+					{/if}
 
-					<div class="mb-2 flex justify-end gap-2">
+					<div class="flex justify-end gap-2">
 						<Button
 							type="button"
 							variant="secondary"
@@ -111,7 +157,7 @@
 						>
 							Cancel
 						</Button>
-						<Button type="submit" variant="primary" size="large">
+						<Button type="submit" variant="primary" size="large" disabled={!saveEnabled}>
 							{#if editing}Save{:else}Create{/if}
 						</Button>
 					</div>
@@ -169,7 +215,6 @@
 		padding: 1rem;
 		width: 100%;
 		max-width: 60%;
-		max-height: 600px;
 		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 		z-index: 1000;
 	}

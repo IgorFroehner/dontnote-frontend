@@ -3,9 +3,10 @@
 	import { authStore, setAuthInfo } from '$lib/stores/AuthStore';
 	import { get } from 'svelte/store';
 	import Button from '$lib/components/Button.svelte';
-	import { getToastStore } from '@skeletonlabs/skeleton';
+	import { getModalStore, getToastStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
 	import type { AuthInfo } from '$lib/types/user';
+	import { loadNotesFromLocalStorage } from '$lib/services/notes-service';
 
 	let userIdentifier = $state('');
 	let password = $state('');
@@ -13,6 +14,7 @@
 	let error = $state('');
 
 	const toastStore = getToastStore();
+	const modalStore = getModalStore();
 
 	if (get(authStore) !== null) {
 		goto('/');
@@ -20,28 +22,50 @@
 
 	const signIn = async () => {
 		loading = true;
-		const response = await signInRequest('users/sign_in', {
-			user_identifier: userIdentifier,
-			password
-		})
 
-		if (response.ok) {
-			const authInfo = await response.json() as AuthInfo;
-
-			toastStore.trigger({
-				message: 'Sign in successful',
-				timeout: 2000,
-				background: 'bg-green-500'
+		try {
+			const response = await signInRequest('users/sign_in', {
+				user_identifier: userIdentifier,
+				password
 			});
-			setAuthInfo(authInfo);
-			await goto('/');
+
+			if (response.ok) {
+				const authInfo = (await response.json()) as AuthInfo;
+
+				toastStore.trigger({
+					message: 'Sign in successful',
+					timeout: 2000,
+					background: 'bg-green-500'
+				});
+				setAuthInfo(authInfo);
+
+				if (loadNotesFromLocalStorage().length > 0) {
+					const syncUpModal: ModalSettings = {
+						type: 'component',
+						component: 'syncUpModal',
+						meta: {}
+					};
+					modalStore.trigger(syncUpModal);
+				}
+
+				loading = false;
+				await goto('/');
+				return;
+			}
+		} catch {
+			toastStore.trigger({
+				message: 'Something went wrong while signing in.',
+				timeout: 5000,
+				classes: 'bg-red-500'
+			});
+			loading = false;
 			return;
 		}
 
 		error = 'Invalid email or password';
 		toastStore.trigger({
 			message: 'Sign in failed',
-			timeout: 2000,
+			timeout: 5000,
 			classes: 'bg-red-500'
 		});
 
@@ -74,12 +98,12 @@
 		/>
 
 		{#if error}
-			<p class="text-center text-red-500 mt-2">
+			<p class="mt-2 text-center text-red-500">
 				{error}
 			</p>
 		{/if}
 
-		<div class="mt-4 flex justify-end gap-5 mb-4">
+		<div class="mb-4 mt-4 flex justify-end gap-5">
 			<Button type="submit" {loading}>Sign In</Button>
 		</div>
 

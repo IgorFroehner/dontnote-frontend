@@ -2,7 +2,7 @@ import { authStore } from '$lib/stores/AuthStore';
 import { get } from 'svelte/store';
 import type { Note } from '$lib/types/note';
 import Fuse from 'fuse.js';
-import { getRequest, postRequest } from '$lib/api/api-service';
+import { deleteRequest, getRequest, postRequest, putRequest } from '$lib/api/api-service';
 
 export const searchNotes = async (query: string) => {
 	if (get(authStore)) {
@@ -35,7 +35,7 @@ export const loadNotes = async () => {
 	return loadNotesFromLocalStorage();
 };
 
-const loadNotesFromLocalStorage = () => {
+export const loadNotesFromLocalStorage = () => {
 	if (typeof localStorage !== 'undefined') {
 		const notes = localStorage.getItem('notes');
 		return notes ? (JSON.parse(notes) as Note[]) : ([] as Note[]);
@@ -44,17 +44,24 @@ const loadNotesFromLocalStorage = () => {
 };
 
 export const saveNote = async (note: Note) => {
+	if (get(authStore)) {
+		let response: object;
+		if (note.uuid) {
+			response = await putRequest(`notes/${note.uuid}`, note);
+
+			return response as Note;
+		} else {
+			response = await postRequest('notes', note);
+		}
+
+		return response as Note;
+	}
+
 	if (note.uuid === undefined) {
 		const uuid = self.crypto.randomUUID();
 		note.uuid = `local-${uuid}`;
 		note.createdAt = new Date().toISOString();
 		note.updatedAt = new Date().toISOString();
-	}
-
-	if (get(authStore)) {
-		const response = await postRequest('notes', note);
-
-		return response as Note;
 	}
 
 	if (typeof localStorage !== 'undefined') {
@@ -80,8 +87,7 @@ export const deleteNote = async (note: Note) => {
 	if (!note.uuid) return;
 
 	if (get(authStore)) {
-		// delete note from backend
-		return;
+		return await deleteRequest(`notes/${note.uuid}`);
 	}
 
 	if (typeof localStorage !== 'undefined') {

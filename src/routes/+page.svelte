@@ -43,6 +43,9 @@
 			}
 			openModal({ ...$notesStore[0] }, 'show');
 		}
+		if (search.length >= 100) {
+			search = search.slice(0, 100);
+		}
 	};
 
 	$effect(() => {
