@@ -7,6 +7,7 @@
 	import { goto } from '$app/navigation';
 	import type { AuthInfo } from '$lib/types/user';
 	import { loadNotesFromLocalStorage } from '$lib/services/notes-service';
+	import { isBackedEnabled } from '$lib/services/features-service';
 
 	let userIdentifier = $state('');
 	let password = $state('');
@@ -16,7 +17,7 @@
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 
-	if (get(authStore) !== null) {
+	if (get(authStore) !== null || !isBackedEnabled) {
 		goto('/');
 	}
 

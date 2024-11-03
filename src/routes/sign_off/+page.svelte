@@ -3,10 +3,11 @@
 	import { authStore, clearAuthInfo } from '$lib/stores/AuthStore';
 	import { get } from 'svelte/store';
 	import { getToastStore } from '@skeletonlabs/skeleton';
+	import { isBackedEnabled } from '$lib/services/features-service';
 
 	const toastStore = getToastStore();
 
-	if (get(authStore) === null) {
+	if (get(authStore) === null || !isBackedEnabled) {
 		goto('/');
 	}
 

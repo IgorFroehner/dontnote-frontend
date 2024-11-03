@@ -9,6 +9,7 @@
 	import { loadNotes, searchNotes } from '$lib/services/notes-service';
 	import Button from '$lib/components/Button.svelte';
 	import type { Note } from '$lib/types/note';
+	import { isBackedEnabled } from '$lib/services/features-service';
 
 	const modalStore = getModalStore();
 
@@ -66,17 +67,19 @@
 
 			<ThemeToggle />
 
-			<div class="mt-3">
-				{#if $authStore === null}
-					<a href="/sign_in">
-						<Button variant="primary" size="medium">Sing In</Button>
-					</a>
-				{:else}
-					<a href="/sign_off">
-						<Button variant="secondary" size="medium">Sign Off</Button>
-					</a>
-				{/if}
-			</div>
+			{#if isBackedEnabled}
+				<div class="mt-3">
+					{#if $authStore === null}
+						<a href="/sign_in">
+							<Button variant="primary" size="medium">Sing In</Button>
+						</a>
+					{:else}
+						<a href="/sign_off">
+							<Button variant="secondary" size="medium">Sign Off</Button>
+						</a>
+					{/if}
+				</div>
+			{/if}
 		</div>
 	</nav>
 </header>

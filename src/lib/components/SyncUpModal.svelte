@@ -3,6 +3,7 @@
 	import { loadNotesFromLocalStorage } from '$lib/services/notes-service';
 	import { postRequest } from '$lib/api/api-service';
 	import Button from '$lib/components/Button.svelte';
+	import { notesStore } from '$lib/stores/NotesStore';
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
 
@@ -13,11 +14,13 @@
 	};
 
 	const onConfirm = async () => {
+		loading = true;
 		const localNotes = loadNotesFromLocalStorage();
 		if (localNotes.length > 0) {
 			try {
 				await postRequest('notes/batch_create', localNotes);
 
+				notesStore.update((notes) => [...notes, ...localNotes]);
 				eraseLocalNotes();
 				toastStore.trigger({
 					message: 'Local notes pushed successfully',
@@ -55,7 +58,7 @@
 
 			<div class="mt-4 flex justify-end gap-2">
 				<Button onClick={onNegative}>No</Button>
-				<Button variant="secondary" onClick={onConfirm}>Yes</Button>
+				<Button variant="secondary" onClick={onConfirm} loading={loading}>Yes</Button>
 			</div>
 		</div>
 	</dialog>
