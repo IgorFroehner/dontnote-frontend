@@ -1,6 +1,9 @@
 export type AuthInfo = {
-	uuid: string;
-	username: string;
-	email: string;
 	token: string;
+	user: {
+		uuid: string;
+		username: string;
+		email: string;
+		created_at: string;
+	};
 };

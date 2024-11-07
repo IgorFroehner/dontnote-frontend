@@ -10,6 +10,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import type { Note } from '$lib/types/note';
 	import { isBackedEnabled } from '$lib/services/features-service';
+	import { get } from 'svelte/store';
 
 	const modalStore = getModalStore();
 
@@ -49,6 +50,15 @@
 		}
 	};
 
+	const openUserProfile = () => {
+		const modal: ModalSettings = {
+			type: 'component',
+			component: 'userProfileModal',
+			meta: {}
+		};
+		modalStore.trigger(modal);
+	};
+
 	$effect(() => {
 		if (search) {
 			searchNotes(search).then((notes_result) => ($notesStore = notes_result));
@@ -74,9 +84,9 @@
 							<Button variant="primary" size="medium">Sing In</Button>
 						</a>
 					{:else}
-						<a href="/sign_off">
-							<Button variant="secondary" size="medium">Sign Off</Button>
-						</a>
+						<Button variant="secondary" size="medium" onClick={openUserProfile}
+							>{get(authStore)?.user.username}</Button
+						>
 					{/if}
 				</div>
 			{/if}

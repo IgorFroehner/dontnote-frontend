@@ -7,6 +7,7 @@
 	import { initializeStores, Modal, type ModalComponent, Toast } from '@skeletonlabs/skeleton';
 	import ConfirmModal from '$lib/components/ConfirmModal.svelte';
 	import SyncUpModal from '$lib/components/SyncUpModal.svelte';
+	import UserProfileModal from '$lib/components/UserProfileModal.svelte';
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
@@ -16,7 +17,8 @@
 	const modalRegistry: Record<string, ModalComponent> = {
 		noteModal: { ref: NoteModal },
 		confirmModal: { ref: ConfirmModal },
-		syncUpModal: { ref: SyncUpModal }
+		syncUpModal: { ref: SyncUpModal },
+		userProfileModal: { ref: UserProfileModal }
 	};
 </script>
 

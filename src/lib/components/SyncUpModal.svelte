@@ -58,7 +58,7 @@
 
 			<div class="mt-4 flex justify-end gap-2">
 				<Button onClick={onNegative}>No</Button>
-				<Button variant="secondary" onClick={onConfirm} loading={loading}>Yes</Button>
+				<Button variant="secondary" onClick={onConfirm} {loading}>Yes</Button>
 			</div>
 		</div>
 	</dialog>
