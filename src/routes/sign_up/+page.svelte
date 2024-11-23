@@ -4,7 +4,8 @@
 	import Button from '$lib/components/Button.svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
-	import { signUpRequest, verifyUserRequest } from '$lib/api/api-service';
+	import { signUpRequest } from '$lib/api/api-service';
+	import VerifyUserSignupStep from '$lib/components/sign_up/VerifyUserSignupStep.svelte';
 
 	const toastStore = getToastStore();
 
@@ -17,8 +18,7 @@
 	let username = $state('');
 	let password = $state('');
 	let passwordConfirmation = $state('');
-	let verificationCode = $state('');
-	let signUpResponse = $state(null);
+	let userSignupInfo = $state(null);
 
 	if (get(authStore) !== null) {
 		goto('/');
@@ -66,7 +66,7 @@
 				background: 'bg-green-500'
 			});
 			step = 1;
-			signUpResponse = await response.json();
+			userSignupInfo = await response.json();
 			loading = false;
 			return;
 		}
@@ -79,40 +79,6 @@
 		}
 
 		loading = false;
-	};
-
-	const handleVerify = async (e: Event) => {
-		loading = true;
-		e.preventDefault();
-
-		if (!verificationCode) {
-			error = 'Please fill in the verification code.';
-			loading = false;
-			return;
-		}
-
-		const response = await verifyUserRequest('users/verify_email', {
-			user_uuid: signUpResponse?.uuid,
-			verification_code: verificationCode
-		});
-
-		if (response.ok) {
-			toastStore.trigger({
-				message: 'Email verified successfully! You can now sign in.',
-				timeout: 2000,
-				background: 'bg-green-500'
-			});
-			loading = false;
-			await goto('/sign_in');
-			return;
-		}
-
-		if (response.status === 400) {
-			const errorResponse = await response.json();
-			error = errorResponse.message;
-		} else {
-			error = 'Something went wrong while verifying your email.';
-		}
 	};
 </script>
 
@@ -170,6 +136,11 @@
 				<p class="mt-2 text-center text-red-500">
 					{error}
 				</p>
+				{#if error.toLowerCase().includes('already in use')}
+					<p class="mt-2 text-center text-red-500">
+						You can try to <a href="/sign_in" class="underline hover:text-blue-600">Sign In</a>.
+					</p>
+				{/if}
 			{/if}
 
 			<div class="mb-4 mt-4 flex justify-end gap-5">
@@ -177,34 +148,8 @@
 			</div>
 		</form>
 	{/if}
-	{#if step === 1}
-		<p class="mb-4 text-center">
-			We've sent a verification code to the email {email}, <br />
-			please enter it below to confirm that it's yours.
-		</p>
-
-		<form onsubmit={handleVerify}>
-			<label for="verify-code" class="mt-4 block pb-1 font-semibold dark:text-white">
-				Verification Code
-			</label>
-			<input
-				id="verify-code"
-				type="text"
-				bind:value={verificationCode}
-				class="block w-80 rounded-md border p-2 dark:bg-gray-700 dark:text-white"
-				required
-			/>
-
-			{#if error}
-				<p class="mt-2 text-center text-red-500">
-					{error}
-				</p>
-			{/if}
-
-			<div class="mb-4 mt-4 flex justify-end gap-5">
-				<Button type="submit" {loading}>Verify</Button>
-			</div>
-		</form>
+	{#if step === 1 && userSignupInfo}
+		<VerifyUserSignupStep {userSignupInfo} successCallback={() => goto('/sign_in')} />
 	{/if}
 </div>
 

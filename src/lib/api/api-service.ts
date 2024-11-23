@@ -106,12 +106,23 @@ export async function verifyUserRequest(endpoint: string, data: any) {
 	});
 }
 
-export async function signInRequest(endpoint: string, data: any) {
+export async function askForVerificationRequest(endpoint: string, data: any) {
 	return await fetch(`${API_URL}/${endpoint}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(data)
+	});
+}
+
+export async function signInRequest(endpoint: string, data: any) {
+	return await fetch(`${API_URL}/${endpoint}`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(data),
+		credentials: 'include'
 	});
 }

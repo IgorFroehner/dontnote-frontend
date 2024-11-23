@@ -85,7 +85,7 @@
 						</a>
 					{:else}
 						<Button variant="secondary" size="medium" onClick={openUserProfile}
-							>{get(authStore)?.user.username}</Button
+							>{get(authStore)?.user.username.slice(0, 8)}</Button
 						>
 					{/if}
 				</div>
@@ -105,10 +105,10 @@
 					Your notes as you've never experienced.
 				</p>
 
-				<p class="text-lg text-gray-700 dark:text-gray-400">
+				<p class="text-lg text-center text-gray-700 dark:text-gray-400">
 					Start by creating a new note of something that you want to remember, or<br />
-					that you want to be easily accessible. Later you can search them by title<br />
-					using the search bar above.
+					that you want to be easily accessible. Later you can search them using <br />
+					the search bar above.
 				</p>
 			</div>
 
