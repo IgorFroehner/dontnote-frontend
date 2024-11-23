@@ -1,7 +1,6 @@
 <script lang="ts">
 import Button from '$lib/components/Button.svelte';
 import { verifyUserRequest } from '$lib/api/api-service';
-import { goto } from '$app/navigation';
 import { getToastStore } from '@skeletonlabs/skeleton';
 
 let toastStore = getToastStore();
