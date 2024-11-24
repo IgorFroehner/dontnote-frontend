@@ -78,7 +78,7 @@
 </script>
 
 <header>
-	<nav class="bg-white px-4 dark:bg-gray-950" aria-label="Page navigation">
+	<nav class="bg-white px-4 dark:bg-black" aria-label="Page navigation">
 		<div class="flex items-center justify-between gap-3">
 			<h1 class="logo-text pb-3 pl-5 pt-5 dark:text-gray-200"><a href="/">DontNote</a></h1>
 
@@ -103,20 +103,20 @@
 	</nav>
 </header>
 
-<div class="container mx-auto mt-5 min-h-full dark:bg-gray-950">
-	<div class="border-black-200 container flex flex-col items-center gap-4 rounded-md p-4">
-		{#each $notesStore as note}
-			{#if $authStore === null}
+<div class="container mx-auto mt-5 min-h-full dark:bg-black">
+	<div class="border-black-200 flex flex-col items-center gap-4 rounded-md p-4">
+			{#if $authStore === null && $notesStore.length > 0}
 				<p class="text-lg text-center text-gray-700 dark:text-gray-400 mt-10">
 					You're using DontNote without signing in, so your notes are being stored in your browser.<br />
 					To store them in the cloud and access them from anywhere, sign in.
 				</p>
 			{/if}
 
-			<div class="flex flex-wrap items-start w-full">
-				<NoteCard {note} />
+			<div class="flex flex-wrap items-start w-full gap-4">
+				{#each $notesStore as note}
+					<NoteCard {note} />
+				{/each}
 			</div>
-		{/each}
 		{#if $notesStore.length === 0 && search === '' && !loading}
 			<div class="flex h-96 w-screen flex-col items-center justify-center dark:text-white">
 				<p class="mb-5 text-2xl font-bold text-gray-700 dark:text-gray-200">

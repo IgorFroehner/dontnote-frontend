@@ -103,7 +103,7 @@
 
 {#if $modalStore[0]}
 	<div class="backdrop"></div>
-	<div class="dialog relative rounded-lg border border-gray-300 bg-white dark:bg-gray-800">
+	<div class="dialog relative rounded-lg border border-gray-300 bg-white dark:bg-gray-900">
 		<button
 			class="close-button text-xl font-bold text-gray-900 outline-none hover:text-gray-600 focus:outline-none focus-visible:ring-0 dark:text-gray-400 dark:hover:text-gray-500"
 			onclick={() => modalStore.close()}
@@ -111,7 +111,7 @@
 			&times;
 		</button>
 
-		<div class="modal-content bg-white outline-none dark:bg-gray-800">
+		<div class="modal-content bg-white outline-none dark:bg-gray-900">
 			{#if mode === 'editor'}
 				<h2 class="text-lg font-bold dark:text-white">
 					{#if editing}Edit Note{:else}Create New Note{/if}

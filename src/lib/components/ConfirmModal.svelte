@@ -22,8 +22,8 @@
 
 {#if $modalStore[0]}
 	<div class="backdrop"></div>
-	<dialog open class="w-1/3 border-gray-300 bg-white dark:bg-gray-800">
-		<div class="modal-content bg-white dark:bg-gray-800">
+	<dialog open class="w-1/3 border-gray-300 bg-white dark:bg-gray-900">
+		<div class="modal-content bg-white dark:bg-gray-900">
 			<h2 class="text-lg font-bold dark:text-white">{title}</h2>
 
 			<p class="mt-2 dark:text-white">{body}</p>

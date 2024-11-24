@@ -33,8 +33,8 @@
 	onkeyup={openModal}
 	role="button"
 	tabindex="0"
-	class="mb-4 w-fit max-w-96 cursor-pointer rounded-lg border border-gray-300 bg-white p-4 shadow-md transition-shadow hover:shadow-lg dark:bg-gray-800 dark:shadow-md dark:shadow-gray-800 dark:hover:shadow-lg dark:hover:shadow-gray-800"
+	class="mb-4 w-fit max-w-96 cursor-pointer rounded-lg border border-gray-500 bg-white p-4 shadow-md transition-shadow hover:shadow-lg dark:bg-gray-900 dark:shadow-md dark:shadow-gray-800 dark:hover:shadow-lg dark:hover:shadow-gray-800"
 >
-	<h2 class="mb-2 flex-grow text-xl font-bold text-gray-800 dark:text-gray-100">{title}</h2>
-	<p class="text-gray-600 dark:text-gray-300">{content}</p>
+	<h2 class="mb-2 flex-grow text-xl font-bold text-gray-800 dark:text-gray-300">{title}</h2>
+	<p class="text-gray-600 dark:text-gray-400">{content}</p>
 </div>
