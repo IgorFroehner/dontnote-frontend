@@ -15,6 +15,7 @@
 	const modalStore = getModalStore();
 
 	let search = $state('');
+	let loading = $state(false);
 
 	const openModal = (note?: Note, mode?: 'editor' | 'show') => {
 		mode = mode || 'editor';
@@ -60,10 +61,18 @@
 	};
 
 	$effect(() => {
+		loading = true;
+
 		if (search) {
-			searchNotes(search).then((notes_result) => ($notesStore = notes_result));
+			searchNotes(search).then((notes_result) => {
+				$notesStore = notes_result
+				loading = false;
+			});
 		} else {
-			loadNotes().then((notes_loaded) => ($notesStore = notes_loaded));
+			loadNotes().then((notes_loaded) => {
+				$notesStore = notes_loaded
+				loading = false;
+			});
 		}
 	});
 </script>
@@ -95,11 +104,20 @@
 </header>
 
 <div class="container mx-auto mt-5 min-h-full dark:bg-gray-950">
-	<div class="border-black-200 container flex flex-wrap items-start gap-4 rounded-md p-4">
+	<div class="border-black-200 container flex flex-col items-center gap-4 rounded-md p-4">
 		{#each $notesStore as note}
-			<NoteCard {note} />
+			{#if $authStore === null}
+				<p class="text-lg text-center text-gray-700 dark:text-gray-400 mt-10">
+					You're using DontNote without signing in, so your notes are being stored in your browser.<br />
+					To store them in the cloud and access them from anywhere, sign in.
+				</p>
+			{/if}
+
+			<div class="flex flex-wrap items-start w-full">
+				<NoteCard {note} />
+			</div>
 		{/each}
-		{#if $notesStore.length === 0 && search === ''}
+		{#if $notesStore.length === 0 && search === '' && !loading}
 			<div class="flex h-96 w-screen flex-col items-center justify-center dark:text-white">
 				<p class="mb-5 text-2xl font-bold text-gray-700 dark:text-gray-200">
 					Your notes as you've never experienced.
@@ -110,6 +128,13 @@
 					that you want to be easily accessible. Later you can search them using <br />
 					the search bar above.
 				</p>
+
+				{#if $authStore === null}
+					<p class="text-lg text-center text-gray-700 dark:text-gray-400 mt-10">
+						You can create notes without sing in, but they will be stored locally <br />
+						To store them in the cloud and access them from anywhere, sign in.
+					</p>
+				{/if}
 			</div>
 
 			<div class="arrow">
